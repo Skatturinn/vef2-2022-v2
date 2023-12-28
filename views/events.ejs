@@ -1,0 +1,16 @@
+<section class="events">
+	<h2 class="events_title">Viðbuðir á næstunni</h2>
+	<ul class="events_list">
+		<% for (const event of events) {%>
+			<li class="events__event">
+				<a href="/<%= event.slug %>" class=" event_eventLink">
+					<%= event.name %>
+				</a>
+				<p class="events__eventDescription">
+					<%= event.description %>
+				</p>
+			</li>
+			<% } %>
+	</ul>
+
+</section>
