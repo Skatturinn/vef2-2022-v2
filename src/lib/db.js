@@ -144,6 +144,18 @@ export async function createEvent({ name, slug, description } = {}) {
 	`;
 	const values = [name, slug, description];
 	const result = await query(q, values);
+	if (result && result.rowCount === 1) {
+		return result.rows[0];
+	}
+
+	return null;
+}
+export async function deleteEvent(id) {
+	const q = `
+	  DELETE FROM events
+	  WHERE id = $1;
+	`;
+	const result = await query(q, id);
 	console.log(result)
 	if (result && result.rowCount === 1) {
 		return result.rows[0];

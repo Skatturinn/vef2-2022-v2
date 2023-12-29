@@ -1,5 +1,6 @@
 import express from 'express';
 import { validationResult } from 'express-validator';
+import passport from 'passport';
 import { catchErrors } from '../lib/catch-errors.js';
 import { listEvents, listEvent, listRegistered, register } from '../lib/db.js';
 import {
@@ -14,18 +15,19 @@ async function indexRoute(req, res) {
 	const events = await listEvents();
 	res.render('index', {
 		title: 'Viðburðasíðan',
-		events,
+		events
 	});
+
 }
 
 async function eventRoute(req, res, next) {
 	const { slug } = req.params;
 	const event = await listEvent(slug);
-
+	// console.log(req.user)
 	if (!event) {
 		return next()
 	}
-
+	const user = req.user || false;
 	const registered = await listRegistered(event.id);
 
 	return res.render('event', {
@@ -34,6 +36,7 @@ async function eventRoute(req, res, next) {
 		registered,
 		errors: [],
 		data: {},
+		user
 	});
 }
 
@@ -96,6 +99,45 @@ async function registerRoute(req, res) {
 
 	return res.render('error');
 }
+function login(req, res) {
+	if (req.isAuthenticated()) {
+		return res.redirect('/admin');
+	}
+
+	let message = '';
+
+	// Athugum hvort einhver skilaboð séu til í session, ef svo er birtum þau
+	// og hreinsum skilaboð
+	if (req.session.messages && req.session.messages.length > 0) {
+		message = req.session.messages.join(', ');
+		req.session.messages = [];
+	}
+
+	return res.render('login', { message, title: 'Innskráning' });
+}
+indexRouter.post('/wutdahell',
+	(req, res) => { console.log('yes'), res.redirect('/') })
+indexRouter.get('/login', login);
+indexRouter.post(
+	'/login',
+	// Þetta notar strat að ofan til að skrá notanda inn
+	passport.authenticate('local', {
+		failureMessage: 'Notandanafn eða lykilorð vitlaust.',
+		failureRedirect: '/admin/login',
+	}),
+
+	// Ef við komumst hingað var notandi skráður inn, senda á /admin
+	(req, res) => {
+		res.redirect('/admin');
+	}
+);
+
+indexRouter.get('/logout', (req, res) => {
+	// logout hendir session cookie og session
+	req.logout();
+	res.redirect('/');
+});
+
 indexRouter.get('/', catchErrors(indexRoute));
 indexRouter.get('/:slug', catchErrors(eventRoute));
 indexRouter.post(
@@ -107,23 +149,5 @@ indexRouter.post(
 	catchErrors(registerRoute)
 );
 
-
-
-
-
-
-
-
-
-// indexRouter.use('/:slug', eventRoute)
-indexRouter.get('/:slug', catchErrors(eventRoute));
-indexRouter.post(
-	'/:slug',
-	registrationValidationMiddleware('comment'),
-	xssSanitizationMiddleware('comment'),
-	catchErrors(validationCheck),
-	sanitizationMiddleware('comment'),
-	catchErrors(registerRoute)
-);
 // TODO útfæra öll routes
 indexRouter.get('/:slug/thanks', catchErrors(eventRegisteredRoute));

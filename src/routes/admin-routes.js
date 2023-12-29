@@ -20,18 +20,18 @@ export const adminRouter = express.Router();
 
 export async function index(req, res) {
 	const events = await listEvents();
-	const { user: { username } = {} } = req || {};
-
+	const { user: { username, admin } = {} } = req || {};
+	// console.log(req.user)
 	return res.render('admin', {
 		username,
 		events,
 		errors: [],
 		data: {},
 		title: 'Viðburðir — umsjón',
-		admin: true,
+		admin,
 	});
 }
-async function validationCheck2(req, res, next) {
+async function validationCheck(req, res, next) {
 	const { name, description } = req.body;
 
 	const events = await listEvents();
@@ -140,16 +140,6 @@ async function validationCheckUpdate(req, res, next) {
 	return next();
 }
 
-adminRouter.get('/', ensureLoggedIn, catchErrors(index));
-adminRouter.post(
-	'/',
-	ensureLoggedIn,
-	registrationValidationMiddleware('description'),
-	xssSanitizationMiddleware('description'),
-	catchErrors(validationCheck2),
-	sanitizationMiddleware('description'),
-	catchErrors(registerRoute)
-);
 function login(req, res) {
 	if (req.isAuthenticated()) {
 		return res.redirect('/admin');
@@ -191,7 +181,7 @@ adminRouter.post(
 	registrationValidationMiddleware('description'),
 	xssSanitizationMiddleware('description'),
 	sanitizationMiddleware('description'),
-	catchErrors(validationCheck2),
+	catchErrors(validationCheck),
 	catchErrors(registerRoute)
 );
 
