@@ -9,26 +9,6 @@
 - Setja upp postgres gagnagrunn, vinna með skema og gögn sem til eru og bæta við þau
 - Setja upp verkefni í hýsingu
 
-## Verkefnið
-
-Halda skal áfram með [verkefni 2: viðburðakerfi](https://github.com/vefforritun/vef2-2022-v2) frá því í vefforritun 2 árið 2022. Byggja skal ofan á [sýnilausn sem gefin var út](https://github.com/vefforritun/vef2-2022-v2-synilausn) (ekki er krafa að gera; það má byggja verkefnið alveg frá grunni en það er töluvert meiri vinna.)
-
-### Uppfærslur á pökkum og lagfæringar
-
-Uppfæra skal alla pakka í verkefni í nýjustu útgáfu og passa að verkefni keyri.
-
-Uppfæra skal þ.a. nota skal node útgáfu 18.
-
-Laga skal hvernig test keyra, ef test sem nota test gagnagrunn keyra geta þau skilið eftir gögn sem valda því að næsta keyrsla getur ekki „droppa“ gagnagrunni.
-
-### Almennir notendur og skráning á viðburði
-
-Bæta skal við virkni fyrir „almenna notendur“ (þ.e.a.s. ekki stjórnendur) með nýskráningu og innskráningu.
-
-Skráning á viðburði krefur notanda um að vera innskráður eða fara gegnum nýskráningu.
-
-Notendur sem eru innskráðir geta skráð sig á viðburði eða skráð sig af þeim.
-
 ### Möguleiki á að eyða viðburðum og auka gögn
 
 Bæta skal við möguleika á að eyða viðburðum ef innskráður notandi er stjórnandi.

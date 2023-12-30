@@ -6,6 +6,22 @@
 
 	<%- include('events') -%>
 
-		<%- include('access') -%>
+		<% if (!auth) { %>
+			<%- include('access') -%>
+				<% } else { %>
+					<% if (admin) { %>
+						<%- include ('admin') %>
+							<%}%>
+								</div>
 
-			<%- include('footer') -%>
+								<div class="user">
+									<p class="user__loggedin">Innskráður sem: <strong>
+											<%= username %>
+										</strong></p>
+									<p class="user__logout"><a href="/logout">Útskrá</a></p>
+								</div>
+								<%}%>
+
+
+
+									<%- include('footer') -%>

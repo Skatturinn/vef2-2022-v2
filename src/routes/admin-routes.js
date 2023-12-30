@@ -3,6 +3,7 @@ import { validationResult } from 'express-validator';
 import { catchErrors } from '../lib/catch-errors.js';
 import {
 	createEvent,
+	deleteEvent,
 	listEvent,
 	listEventByName,
 	listEvents,
@@ -75,12 +76,11 @@ async function registerRoute(req, res) {
 	const created = await createEvent({ name, slug, description });
 
 	if (created) {
-		return res.redirect('/admin');
+		return res.redirect('/');
 	}
 
 	return res.render('error');
 }
-
 async function updateRoute(req, res) {
 	const { name, description } = req.body;
 	const { slug } = req.params;
@@ -139,23 +139,6 @@ async function validationCheckUpdate(req, res, next) {
 
 	return next();
 }
-
-function login(req, res) {
-	if (req.isAuthenticated()) {
-		return res.redirect('/admin');
-	}
-
-	let message = '';
-
-	// Athugum hvort einhver skilaboð séu til í session, ef svo er birtum þau
-	// og hreinsum skilaboð
-	if (req.session.messages && req.session.messages.length > 0) {
-		message = req.session.messages.join(', ');
-		req.session.messages = [];
-	}
-
-	return res.render('login', { message, title: 'Innskráning' });
-}
 async function eventRoute(req, res, next) {
 	const { slug } = req.params;
 	const { user: { username } = {} } = req;
@@ -174,6 +157,14 @@ async function eventRoute(req, res, next) {
 		data: { name: event.name, description: event.description },
 	});
 }
+async function deleteRoute(req, res) {
+	const { slug } = req.params;
+	console.log(slug)
+	const event = await listEvent(slug);
+	await deleteEvent(event.id);
+	return res.redirect('/')
+}
+
 adminRouter.get('/', ensureLoggedIn, catchErrors(index));
 adminRouter.post(
 	'/',
@@ -184,28 +175,6 @@ adminRouter.post(
 	catchErrors(validationCheck),
 	catchErrors(registerRoute)
 );
-
-adminRouter.get('/login', login);
-adminRouter.post(
-	'/login',
-	// console.log('post'),
-	// Þetta notar strat að ofan til að skrá notanda inn
-	passport.authenticate('local', {
-		failureMessage: 'Notandanafn eða lykilorð vitlaust.',
-		failureRedirect: '/admin/login',
-	}),
-
-	// Ef við komumst hingað var notandi skráður inn, senda á /admin
-	(req, res) => {
-		res.redirect('/admin');
-	}
-);
-
-adminRouter.get('/logout', (req, res) => {
-	// logout hendir session cookie og session
-	req.logout();
-	res.redirect('/');
-});
 
 // Verður að vera seinast svo það taki ekki yfir önnur route
 adminRouter.get('/:slug', ensureLoggedIn, catchErrors(eventRoute));
@@ -218,3 +187,7 @@ adminRouter.post(
 	sanitizationMiddleware('description'),
 	catchErrors(updateRoute)
 );
+adminRouter.post('/:slug/delete',
+	ensureLoggedIn,
+	catchErrors(deleteRoute))
+

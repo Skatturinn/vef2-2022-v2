@@ -1,3 +1,4 @@
+import { error } from 'console';
 import { readFile } from 'fs/promises';
 import pg from 'pg';
 
@@ -89,7 +90,6 @@ export async function listEvent(slug) {
 	`;
 
 	const result = await query(q, [slug]);
-
 	if (result && result.rowCount === 1) {
 		return result.rows[0];
 	}
@@ -124,9 +124,80 @@ export async function register({ name, comment, event } = {}) {
 	  RETURNING
 		id, name, comment, event;
 	`;
-	const values = [name, comment, event];
-	const result = await query(q, values);
+	let b = true;
+	const arr = await listRegistered(event)
+	arr.forEach(element => {
+		if (element.name === name) {
+			b = false
+		}
+	});
+	if (b) {
+		const values = [name, comment, event];
+		const result = await query(q, values);
+		if (result && result.rowCount === 1) {
+			return result.rows[0];
+		}
+	}
+	throw new Error('Notandi núþegar skráður')
 
+}
+// export async function unregister({ name, event } = {}) {
+// 	const q = `
+// 		DELETE FROM registrations
+// 		WHERE name = $1 AND event = $2
+// 	`
+// 	const values = [name, event];
+// 	const result = await query(q, values);
+// 	return result?.rowCount
+// }
+export async function unregister({ name, event } = {}) {
+	let values;
+	let q;
+	if (name) {
+		q = `
+		DELETE FROM registrations
+		WHERE name = $1 AND event = $2
+	  `;
+		values = [name, event];
+	} else {
+		q = `
+		DELETE FROM registrations
+		WHERE event = $1
+	  `;
+		values = [event]
+	}
+
+	try {
+		const result = await query(q, values);
+		return result?.rowCount
+	} catch (error) {
+		console.error('Error during unregister:', error.message);
+		return null;
+	}
+}
+// export async function deleteEvent({ event } = {}) {
+// 	await unregister({ name: false, event })
+// 	const q = `
+// 	  DELETE FROM events
+// 	  WHERE slug = $1
+// 	`;
+// 	const values = [event];
+// 	try {
+// 		const result = await query(q, values);
+// 		return result?.rowCount
+// 	} catch (err) {
+// 		console.error('Error during unregister:', err.message);
+// 		return null;
+// 	}
+// }
+export async function deleteEvent(id) {
+	await unregister({ name: false, event: id })
+	const q = `
+	  DELETE FROM events
+	  WHERE id = $1;
+	`;
+	const values = [id]
+	const result = await query(q, values);
 	if (result && result.rowCount === 1) {
 		return result.rows[0];
 	}
@@ -150,19 +221,18 @@ export async function createEvent({ name, slug, description } = {}) {
 
 	return null;
 }
-export async function deleteEvent(id) {
-	const q = `
-	  DELETE FROM events
-	  WHERE id = $1;
-	`;
-	const result = await query(q, id);
-	console.log(result)
-	if (result && result.rowCount === 1) {
-		return result.rows[0];
-	}
+// export async function deleteEvent(id) {
+// 	const q = `
+// 	  DELETE FROM events
+// 	  WHERE id = $1;
+// 	`;
+// 	const result = await query(q, id);
+// 	if (result && result.rowCount === 1) {
+// 		return result.rows[0];
+// 	}
 
-	return null;
-}
+// 	return null;
+// }
 export async function listEventByName(name) {
 	const q = `
 	  SELECT
