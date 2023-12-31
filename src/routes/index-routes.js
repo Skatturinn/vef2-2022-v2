@@ -6,8 +6,12 @@ import { listEvents, listEvent, listRegistered, register, unregister } from '../
 import {
 	registrationValidationMiddleware,
 	sanitizationMiddleware,
+	userRegistrationValidationMiddleware,
+	userSanitizationMiddleware,
+	userXssSanitizationMiddleware,
 	xssSanitizationMiddleware,
 } from '../lib/validation.js';
+import { createUser } from '../lib/users.js';
 
 export const indexRouter = express.Router();
 
@@ -181,11 +185,27 @@ function login(req, res) {
 
 	return res.render('login', { message, title: 'Innskráning' });
 }
+async function createAccount(req, res) {
+	const { username, password, king } = req.body
+	try {
+		await createUser(username, password, king)
+	} catch (err) {
+		const message = err;
+
+		return res.render('register', { message, title: 'Nýskráning' })
+	}
+	return res.redirect('/')
+}
 // function createAccount(req, res) {
 // 	return res
 // }
 
-indexRouter.get('/register', (req, res) => res.render('register', { title: 'Nýskráning' }))
+indexRouter.get('/register', (req, res) => res.render('register', { message: '', title: 'Nýskráning' }))
+indexRouter.post('/register', createAccount)
+// userRegistrationValidationMiddleware,
+// userXssSanitizationMiddleware,
+// catchErrors(validationCheck),
+// userSanitizationMiddleware,
 indexRouter.get('/login', login);
 indexRouter.post(
 	'/login',

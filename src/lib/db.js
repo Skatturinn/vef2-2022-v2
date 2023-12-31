@@ -83,7 +83,7 @@ export async function listEvents() {
 export async function listEvent(slug) {
 	const q = `
 	SELECT
-		id, name, slug, description, created, updated
+		id, name, slug, description, location, url, created, updated
 	FROM
 		events
 	WHERE slug = $1

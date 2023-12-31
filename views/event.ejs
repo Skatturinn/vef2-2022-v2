@@ -8,6 +8,12 @@
 			<p class="event__description">
 				<%= event.description %>
 			</p>
+			<p>
+				<%= event.location %>
+			</p>
+			<a href="<%= event.url %>">
+				<%= event.url %>
+			</a>
 			<% if (admin) { %>
 				<a href="/admin/<%= event.slug %>" class="event__change">breyta</a>
 				<% } %>
