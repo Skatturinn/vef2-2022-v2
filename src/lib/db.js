@@ -205,15 +205,15 @@ export async function deleteEvent(id) {
 	return null;
 }
 
-export async function createEvent({ name, slug, description } = {}) {
+export async function createEvent({ name, slug, description, location, url } = {}) {
 	const q = `
 	  INSERT INTO events
-		(name, slug, description)
+		(name, slug, description, location, url)
 	  VALUES
-		($1, $2, $3)
-	  RETURNING id, name, slug, description;
+		($1, $2, $3, $4, $5)
+	  RETURNING id, name, slug, description, location, url;
 	`;
-	const values = [name, slug, description];
+	const values = [name, slug, description, location, url];
 	const result = await query(q, values);
 	if (result && result.rowCount === 1) {
 		return result.rows[0];

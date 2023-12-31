@@ -80,16 +80,12 @@ export function userXssSanitizationMiddleware() {
 export function userSanitizationMiddleware() {
 	return [body('username').trim().escape(), body('password').trim().escape()];
 }
-// body('name').trim().escape()
-export function isUrlValid(string) {
-	let a;
+
+export function isUrlValid(string) { // uppfært fall ur v1
 	try {
-		a = new URL(string);
-	} catch (err) {
-		console.error('Error parsing URL:', err);
+		const a = new URL(string);
+		return !!a;
+	} catch {
+		return false;
 	}
-	if (a) {
-		return true;
-	}
-	return false;
 }

@@ -12,6 +12,7 @@ import {
 import passport, { ensureLoggedIn } from '../lib/login.js';
 import { slugify } from '../lib/slugify.js';
 import {
+	isUrlValid,
 	registrationValidationMiddleware,
 	sanitizationMiddleware,
 	xssSanitizationMiddleware,
@@ -33,7 +34,7 @@ export async function index(req, res) {
 	});
 }
 async function validationCheck(req, res, next) {
-	const { name, description } = req.body;
+	const { name, description, location, url } = req.body;
 
 	const events = await listEvents();
 	const { user: { username } = {} } = req;
@@ -41,12 +42,18 @@ async function validationCheck(req, res, next) {
 	const data = {
 		name,
 		description,
+		location,
+		url
 	};
 
 	const validation = validationResult(req);
-
 	const customValidations = [];
-
+	if (url && !isUrlValid(url)) {
+		customValidations.push({
+			param: 'url',
+			msg: 'Hlekkur er ekki gild slóð'
+		})
+	}
 	const eventNameExists = await listEventByName(name);
 
 	if (eventNameExists !== null) {
@@ -70,10 +77,10 @@ async function validationCheck(req, res, next) {
 	return next();
 }
 async function registerRoute(req, res) {
-	const { name, description } = req.body;
+	const { name, description, location, url } = req.body;
 	const slug = slugify(name);
 
-	const created = await createEvent({ name, slug, description });
+	const created = await createEvent({ name, slug, description, location, url });
 
 	if (created) {
 		return res.redirect('/');

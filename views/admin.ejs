@@ -13,14 +13,12 @@
 
 		<div>
 			<label for="location">Staðsetning:</label>
-			<input type="text" name="location" id="location">
-			<%= data.location %></textarea>
+			<input type="text" name="location" id="location" value="<%= data.location %>">
 		</div>
 
 		<div>
-			<label for="location">Hlekkur:</label>
-			<input type="text" name="location" id="location">
-			<%= data.location %></textarea>
+			<label for="url">Hlekkur:</label>
+			<input type="text" name="url" id="url" value="<%= data.url %>">
 		</div>
 		<% if (errors.length> 0) { %>
 			<h3 class="errors__title">Villur við skráningu:</h3>
