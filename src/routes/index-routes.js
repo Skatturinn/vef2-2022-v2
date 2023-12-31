@@ -24,16 +24,8 @@ async function indexRoute(req, res) {
 	const events = await listEvents();
 	const { username, admin } = una(req)
 	const auth = req.isAuthenticated();
-	// const user = req.isAuthenticated() ? req.user : false;
-	// const { username, admin } = { user.username, user.admin };
-	// res.render('index', {
-	// 	title: 'Viðburðasíðan',
-	// 	events,
-	// 	user,
-	// 	data: {},
-	// });
-	// const { user: { username, admin } = {} } = req || {};
-
+	const { query } = req;
+	const p = query?.p || 1
 	return res.render('index', {
 		username,
 		events,
@@ -41,7 +33,8 @@ async function indexRoute(req, res) {
 		data: {},
 		title: 'Viðburðir — umsjón',
 		admin,
-		auth
+		auth,
+		p
 	});
 }
 
@@ -70,15 +63,6 @@ async function eventRoute(req, res, next) {
 		err
 	});
 }
-
-// async function eventRegisteredRoute(req, res) {
-// 	const events = await listEvents();
-
-// 	res.render('registered', {
-// 		title: 'Viðburðasíðan',
-// 		events,
-// 	});
-// }
 
 async function validationCheck(req, res, next) {
 	const { comment } = req.body;
@@ -150,24 +134,6 @@ async function registerRoute(req, res) {
 		});
 	}
 	return res.redirect(`/${event.slug}`)
-	// const registered = await register({
-	// 	name: username,
-	// 	comment,
-	// 	event: event.id,
-	// });
-	// if (typeof (registered) !== 'String') {
-	// 	return res.redirect(`/${event.slug}`);
-	// }
-	// return res.render('event', {
-	// 	title: `${event.name} — Viðburðasíðan`,
-	// 	event,
-	// 	registered,
-	// 	errors: [registered],
-	// 	data: {},
-	// 	admin,
-	// 	auth,
-	// 	username
-	// });
 }
 function login(req, res) {
 	if (req.isAuthenticated()) {
@@ -185,27 +151,31 @@ function login(req, res) {
 
 	return res.render('login', { message, title: 'Innskráning' });
 }
+async function createValidationCheck(req, res, next) {
+	const validation = validationResult(req);
+
+	if (!validation.isEmpty()) {
+		throw new Error(validation.errors.concat(customValidations))
+	}
+}
 async function createAccount(req, res) {
 	const { username, password, king } = req.body
 	try {
+		createValidationCheck(req, res)
 		await createUser(username, password, king)
 	} catch (err) {
 		const message = err;
-
 		return res.render('register', { message, title: 'Nýskráning' })
 	}
 	return res.redirect('/')
 }
-// function createAccount(req, res) {
-// 	return res
-// }
 
 indexRouter.get('/register', (req, res) => res.render('register', { message: '', title: 'Nýskráning' }))
-indexRouter.post('/register', createAccount)
-// userRegistrationValidationMiddleware,
-// userXssSanitizationMiddleware,
-// catchErrors(validationCheck),
-// userSanitizationMiddleware,
+indexRouter.post('/register',
+	userRegistrationValidationMiddleware(),
+	userXssSanitizationMiddleware(),
+	userSanitizationMiddleware(),
+	(catchErrors(createAccount)))
 indexRouter.get('/login', login);
 indexRouter.post(
 	'/login',
@@ -240,9 +210,3 @@ indexRouter.post(
 	sanitizationMiddleware('comment'),
 	catchErrors(registerRoute)
 );
-// indexRouter.post(
-// 	'/:slug/leave',
-// 	catchErrors(unregisterRoute)
-// )
-// TODO útfæra öll routes
-// indexRouter.get('/:slug/thanks', catchErrors(eventRegisteredRoute));

@@ -1,7 +1,9 @@
 <section class="events">
-	<h2 class="events_title">Viðbuðir á næstunni</h2>
+	<h2 class="events_title">
+		<%= events.length %> Viðbuðir á næstunni
+	</h2>
 	<ul class="events_list">
-		<% for (const event of events) {%>
+		<% for (const event of events.slice((p-1)*10,p*10)) {%>
 			<li class="events__event">
 				<a href="/<%= event.slug %>" class=" event_eventLink">
 					<%= event.name %>
@@ -12,5 +14,41 @@
 			</li>
 			<% } %>
 	</ul>
-
+	<% if (events.length> 10) { %>
+		<nav>
+			<% const sidur=Math.ceil(events.length/10) %>
+				<% let i=0 %>
+					<ul class="veldu">
+						<% if ( p> 1) { %>
+							<li class="sidu">
+								<a href="/?p=<%- p - 1 %>">
+									← </a>>
+							</li>
+							<%}%>
+								<% while (i < sidur) { %>
+									<% const sida=i +1 %>
+										<% if (p==sida) { %>
+											<li class="sidu">
+												<p>
+													<%= sida %>
+												</p>
+											</li>
+											<% } else { %>
+												<li class="sidu">
+													<a href="/?p=<%- sida  %>">
+														<%- sida %>
+													</a>
+												</li>
+												<% } %>
+													<% i++ %>
+														<% } %>
+															<% if ( p < sidur) { %>
+																<li class="sidu">
+																	<a href="/?p=<%- p + 1 %>">
+																		→ </a>
+																</li>
+																<%}%>
+					</ul>
+		</nav>
+		<% } %>
 </section>
