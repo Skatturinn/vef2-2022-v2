@@ -1,24 +1,25 @@
 <div class="event__registration">
 	<h2 class="event__subtitle">Nýr viðburður</h2>
 	<form method="post" action="/admin/" enctype="application/x-www-form-urlencoded" class="">
-		<div>
+		<div class="field">
 			<label for="name">Nafn*:</label>
-			<input type="text" name="name" id="name" value="<%= data.name %>">
+			<input type="text" name="name" id="name" placeholder="" value="<%= data.name %>">
 		</div>
 
-		<div>
+		<div class="field field--textarea<%= locals.isInvalid('description', errors) ?  ' field--invalid' : '' %>">
 			<label for="description">Lýsing:</label>
-			<textarea name="description" id="description"><%= data.description %></textarea>
+			<textarea name="description" id="description" class="comment" placeholder=""
+				value="<%= data.description %>"></textarea>
 		</div>
 
-		<div>
+		<div class="field">
 			<label for="location">Staðsetning:</label>
-			<input type="text" name="location" id="location" value="<%= data.location %>">
+			<input type="text" name="location" id="location" placeholder="" value="<%= data.location %>">
 		</div>
 
-		<div>
+		<div class="field">
 			<label for="url">Hlekkur:</label>
-			<input type="text" name="url" id="url" value="<%= data.url %>">
+			<input type="text" name="url" id="url" placeholder="" value="<%= data.url %>">
 		</div>
 		<% if (errors.length> 0) { %>
 			<h3 class="errors__title">Villur við skráningu:</h3>

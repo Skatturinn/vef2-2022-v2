@@ -5,6 +5,7 @@
 	"type": "module",
 	"main": "index.js",
 	"scripts": {
+		"sass": "sass styles.scss ./public/styles.css -w",
 		"dev": "dotenv -e .env -- nodemon ./src/app.js",
 		"start": "dotenv -e .env node ./src/app.js",
 		"setup": "dotenv -e .env node ./src/setup.js",
@@ -30,6 +31,7 @@
 		"passport": "^0.5.2",
 		"passport-local": "^1.0.0",
 		"pg": "^8.11.3",
+		"sass": "^1.69.6",
 		"xss": "^1.0.10"
 	},
 	"devDependencies": {

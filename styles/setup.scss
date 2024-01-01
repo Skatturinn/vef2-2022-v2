@@ -1,0 +1,46 @@
+@use 'sass:math';
+$maxw: 1440px;
+$minw: 500px;
+$bc: #000;
+$wc: #eee;
+$ff1: Helvetica, Arial, sans-serif;
+$lc: #351e10;
+$color-accent: #aa6;
+$color-accent-dark: #663;
+$color-accent-light: #cc8;
+
+* {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+
+html {
+	color: $bc;
+	// font-size: 2.5vw;
+}
+
+
+body {
+	background-color: $wc;
+	color: $bc;
+	font-family: $ff1;
+	margin: 0 auto;
+	width: 90%;
+	max-width: 700px;
+	padding: 0 0.5vw;
+	height: 100vh;
+}
+
+a {
+	color: $color-accent-dark;
+
+	&:hover {
+		color: $color-accent;
+		font-weight: 700;
+	}
+
+	&:active {
+		color: $color-accent-light;
+	}
+}

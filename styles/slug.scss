@@ -1,0 +1,168 @@
+.event {
+
+	&__registration {
+		padding: 0 0 2em 0;
+		margin: 0 0 1em;
+		border-bottom: 1px solid $color-accent-dark;
+
+		h2 {
+			padding: 0.5em 0;
+		}
+	}
+
+	&__info {
+		display: flex;
+		flex-direction: column;
+
+		p {
+			padding: 0.25em 0;
+
+			&:nth-child(3) {
+				margin: 0 0 0 0.5em;
+			}
+		}
+
+		a {
+			margin: 0 0 0 0.5em;
+			width: fit-content;
+
+			&:nth-child(5) {
+				align-self: center;
+			}
+		}
+	}
+
+	&__registeredInfo {
+		padding: 0.5em 0;
+		display: flex;
+		flex-direction: column;
+	}
+
+	&__registeredName {
+		font-weight: 700;
+	}
+
+	&__registeredComment {
+		font-style: italic;
+	}
+
+}
+
+form {
+	.field {
+		margin: 1.5em 0;
+
+		&:has(textarea:not(:placeholder-shown)),
+		&:has(textarea:focus),
+		&:has(input:not(:placeholder-shown)),
+		&:has(input:focus) {
+			label {
+				transform: translate(0, -1.25em);
+				padding: 0 0 0 0;
+			}
+		}
+
+		label {
+			transition: transform 0.33s ease-out, padding 1s ease;
+			position: absolute;
+			padding: 0 0 0 2px;
+		}
+
+		.comment {
+			height: 7em;
+		}
+
+		.comment,
+		input {
+			transition: box-shadow 0.3s ease-in-out, border-color 0.3s ease-in-out;
+			box-shadow: 0 0 0 $color-accent;
+
+			&:focus {
+				outline: none;
+				border-color: $color-accent-light;
+				box-shadow: 0em 0.125em 0.75em 0.125em $color-accent-light;
+			}
+
+			padding: 0.5em 0;
+			width: 100%;
+			border: 1px solid $color-accent;
+		}
+	}
+
+	.button {
+		padding: 0.35em 0;
+		width: 50%;
+		text-align: center;
+		background: linear-gradient($color-accent, $color-accent);
+		border: none;
+		border-radius: 0.35em;
+		margin: 1em 0;
+	}
+}
+
+.event__registration {
+	.user__loggedin {
+		margin: 0 0 2em;
+	}
+}
+
+.button {
+	cursor: pointer;
+	transition: padding 0.1s ease, box-shadow 0.5s ease, border 1s ease, color 0.1s ease-out;
+
+	&:hover,
+	&:focus-visible {
+		background: linear-gradient(110deg, $color-accent-light, $color-accent, $color-accent, $color-accent, $color-accent, 50%);
+		border: 1px solid $color-accent-light;
+		box-shadow: 0em 0.025em 1em 0.025em $color-accent-light;
+		animation-name: shake;
+		animation-duration: 1s;
+		color: $wc;
+	}
+}
+
+.delete:hover {
+	// animation-name: nei;
+	// animation-duration: 4s;
+	color: red;
+	border: 1px red solid;
+}
+
+// @keyframes nei {
+// 	0% {
+// 		color: red;
+// 	}
+
+// 	50% {
+// 		color: red;
+// 	}
+
+
+// }
+
+@keyframes shake {
+	0% {
+		padding: 0.35em 0;
+		transform: rotate(0deg);
+	}
+
+	25% {
+		padding: 0.45em 0.5em;
+		transform: rotate(0.5deg);
+	}
+
+	50% {
+		padding: 0.4em 0em;
+		transform: rotate(-0.25deg);
+	}
+
+	75% {
+		padding: 0.375em 0.5em;
+		transform: rotate(0.125deg);
+	}
+
+	100% {
+		padding: 0.35em 0;
+		transform: rotate(0deg);
+	}
+}

@@ -27,14 +27,16 @@
 					<ul class="event__registeredList">
 						<% registered.forEach((entry)=> { %>
 							<li class="event__registeredItem">
-								<span class="event__registeredName">
-									<%= entry.name %>
-								</span>
-								<% if (entry.comment) { %>
-									<span class="event__registeredComment">
-										<%= entry.comment %>
+								<div class="event__registeredInfo">
+									<span class="event__registeredName">
+										<%= entry.name %>
 									</span>
-									<% } %>
+									<% if (entry.comment) { %>
+										<span class="event__registeredComment">
+											<%= entry.comment %>
+										</span>
+								</div>
+								<% } %>
 							</li>
 							<% }); %>
 					</ul>
@@ -43,7 +45,12 @@
 		<div class="event__registration">
 			<% if (auth) { %>
 				<% if (!err) { %>
-					<h2 class="event__subtitle">Skráðu þig</h2>
+					<div>
+						<h2 class="event__subtitle">Skráðu þig</h2>
+						<p class="user__loggedin">Innskráður sem: <strong>
+								<%= username %>
+							</strong></p>
+					</div>
 					<form method="post" action="/<%= event.slug %>" enctype="application/x-www-form-urlencoded"
 						class="">
 						<% if (errors.length> 0) { %>
@@ -59,7 +66,8 @@
 								<div
 									class="field field--textarea<%= locals.isInvalid('comment', errors) ?  ' field--invalid' : '' %>">
 									<label for="comment">Athugasemd:</label>
-									<textarea name="comment" id="comment"><%= data.comment %></textarea>
+									<textarea name="comment" id="comment" placeholder="" value="<%= data.comment %>"
+										class="comment"></textarea>
 								</div>
 								<button class="button">Skrá mig</button>
 					</form>
@@ -69,9 +77,6 @@
 							enctype="application/x-www-form-urlencoded" class=""><button class="button">Afskrá
 								mig</button></form>
 						<% } %>
-							<p class="user__loggedin">Innskráður sem: <strong>
-									<%= username %>
-								</strong></p>
 							<% } else {%>
 								<h2>Skráðu þig inn til að skrá þig</h2>
 								<%- include('access') -%>
