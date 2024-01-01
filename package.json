@@ -9,13 +9,14 @@
 		"dev": "dotenv -e .env -- nodemon ./src/app.js",
 		"start": "dotenv -e .env node ./src/app.js",
 		"setup": "dotenv -e .env node ./src/setup.js",
-		"test": "NODE_ENV=test NODE_OPTIONS='--experimental-vm-modules' dotenv -e .env.test -- jest ./*.test.js",
+		"fdfdtest": "node --experimental-vm-modules' dotenv -e .env.test -- jest ./*.test.js",
 		"test-watch": "NODE_ENV=test NODE_OPTIONS='--experimental-vm-modules' dotenv -e .env.test -- jest ./*.test.js",
 		"coverage": "NODE_ENV=test NODE_OPTIONS='--experimental-vm-modules' dotenv -e .env.test -- jest --coverage --collectCoverageFrom=\"./src/**/*.js\"",
 		"prettier": "prettier --write .",
 		"lint": "concurrently npm:lint:*",
 		"lint:eslint": "eslint ./src/**/*.js",
-		"lint:stylelint": "stylelint ./public/styles.css"
+		"lint:stylelint": "stylelint ./public/styles.css",
+		"test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --collectCoverageFrom=\"./lib/**/*.js\""
 	},
 	"keywords": [],
 	"author": "",
@@ -28,6 +29,7 @@
 		"express": "^4.17.2",
 		"express-session": "^1.17.2",
 		"express-validator": "^6.14.0",
+		"jes": "^0.6.1",
 		"passport": "^0.5.2",
 		"passport-local": "^1.0.0",
 		"pg": "^8.11.3",
@@ -35,6 +37,7 @@
 		"xss": "^1.0.10"
 	},
 	"devDependencies": {
+		"@jest/globals": "^29.7.0",
 		"concurrently": "^7.0.0",
 		"eslint": "^8.8.0",
 		"eslint-config-airbnb-base": "^15.0.0",

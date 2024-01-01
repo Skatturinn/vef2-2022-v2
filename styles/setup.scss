@@ -32,6 +32,11 @@ body {
 	height: 100vh;
 }
 
+input,
+button {
+	font-family: $ff1;
+}
+
 a {
 	color: $color-accent-dark;
 
