@@ -1,3 +1,5 @@
+SELECT * FROM people OFFSET 0 LIMIT 10
+bara muna næst
 # Vefforritun 2, 2022. Verkefni 2: Viðburðakerfi
 
 [Kynning á verkefni í tíma](https://youtu.be/pLwY4LiR6gc).
